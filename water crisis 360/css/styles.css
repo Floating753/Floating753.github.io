@@ -1,0 +1,164 @@
+body {
+   font-family: Arial, sans-serif;
+   margin: 0;
+   padding: 0;
+   color: #333;
+}
+
+header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 10px 20px;
+   background-color: #fff;
+}
+
+.logo {     
+   width: 200px;
+   height: 100px;
+   overflow: hidden;
+}
+
+.logo img {
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+}
+
+.header-right {
+   display: flex;
+   align-items: center;
+}
+
+.search-bar {
+   margin-right: 20px;
+}
+
+.search-bar input {
+   padding: 5px;
+   border: 1px solid #ccc;
+   width: 300px;
+}
+
+.top-nav a {
+   margin-left: 10px;
+   text-decoration: none;
+   color: #0066cc;
+}
+
+.main-nav {
+   background-color: #f0f0f0;
+   padding: 10px 20px;
+   text-align: right;
+}
+
+.main-nav a {
+   text-decoration: none;
+   color: #333;
+   margin: 0 10px;
+}
+
+.main-content {
+   display: flex;
+}
+
+.sidebar {
+   width: 200px;
+   background-color: #d6d6d6;
+   padding: 20px;
+}
+
+.sidebar h3 {
+   color: #0066cc;
+   font-size: 16px;
+   margin-top: 20px;
+   margin-bottom: 10px;
+}
+
+.sidebar ul {
+   list-style-type: none;
+   padding-left: 0;
+}
+
+.sidebar li {
+   margin-bottom: 5px;
+}
+
+.sidebar a {
+   text-decoration: none;
+   color: #0066cc;
+   font-size: 14px;
+}
+
+.content {
+   flex: 1;
+   padding: 20px;
+}
+
+.hero-image {
+   width: 100%;
+   height: auto;
+   margin-bottom: 20px;
+}
+
+h1, h2 {
+   color: #0066cc;
+}
+
+.cta-buttons {
+   margin-top: 20px;
+}
+
+.btn-primary, .btn-secondary {
+   padding: 10px 20px;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   font-size: 16px;
+   margin-right: 10px;
+}
+
+.btn-primary {
+   background-color: #4CAF50;
+   color: white;
+}
+
+.btn-secondary {
+   background-color: #008CBA;
+   color: white;
+}
+
+footer {
+   background-color: #f0f0f0;
+   padding: 20px;
+   text-align: center;
+}
+
+.footer-logo {
+   height: 90px;
+   margin: 10px 0;
+}
+
+.social-follow {
+   margin-bottom: 5px;
+}
+
+.social-icons {
+   margin-bottom: 10px;
+}
+
+.social-icon {
+   margin: 0 5px;
+   text-decoration: none;
+   color: #0066cc;
+}
+
+.footer-links {
+   font-size: 14px;
+}
+
+.footer-links a {
+   color: #333;
+   text-decoration: none;
+   margin: 0 5px;
+}
