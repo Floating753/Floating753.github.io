@@ -3,134 +3,529 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WaterCrisis360</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Your First AI Project: Skin Condition Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Soothing Neutrals -->
+    <!-- Application Structure Plan: A responsive, single-page application designed as an interactive roadmap for a beginner. The layout uses a fixed sidebar for navigation, allowing users to follow a structured path or jump to specific topics. This is more intuitive than a linear report, breaking down the complex process into manageable, thematic sections. Key interactions include: 1) Clickable cards to compare image analysis techniques dynamically. 2) An interactive diagram to explore the full tech stack (frontend, backend, AI), where clicking a component reveals details in a modal-like view. 3) A visual, step-by-step timeline for the deployment process. This structure facilitates non-linear exploration and focused learning, which is ideal for a beginner who might need to revisit concepts. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Table 1 (Image Analysis Techniques) -> Goal: Compare -> Viz: Interactive Tabs/Cards -> Interaction: Click to reveal details -> Justification: More engaging and less overwhelming than a static table. Allows focused comparison. -> Library/Method: HTML/CSS/JS.
+        - Report Info: Tables 3 & 4 (Frontend/Backend Frameworks) -> Goal: Organize/Inform -> Viz: Interactive Architecture Diagram -> Interaction: Click on a tech component (e.g., Vue, Flask) to see its pros/cons. -> Justification: Visually demonstrates how parts of the system connect, providing context that tables alone cannot. -> Library/Method: HTML/CSS/JS.
+        - Report Info: Deployment Steps -> Goal: Show Process/Change -> Viz: Vertical Timeline -> Interaction: Clickable steps to expand information -> Justification: Turns a list of steps into a clear, visual journey, making the process feel structured and achievable. -> Library/Method: HTML/CSS/JS.
+        - Report Info: Ethical Considerations -> Goal: Inform/Warn -> Viz: High-contrast callout section with icons -> Interaction: Static, but visually distinct to draw attention. -> Justification: Ethical points are critical and must be highlighted for user attention and retention. -> Library/Method: HTML/CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #3D405B;
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+            border-left: 3px solid transparent;
+        }
+        .nav-link.active {
+            background-color: #E0E0E0;
+            color: #3D405B;
+            border-left-color: #E88873;
+            font-weight: 600;
+        }
+        .nav-link:hover {
+            background-color: #EAEAEA;
+            border-left-color: #F4D35E;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .tech-card {
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tech-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .tech-card.selected {
+            border-color: #E88873;
+            box-shadow: 0 0 0 3px rgba(232, 136, 115, 0.4);
+        }
+        .timeline-item .timeline-content {
+            display: none;
+        }
+        .timeline-item.active .timeline-content {
+            display: block;
+        }
+        .timeline-dot {
+            transition: background-color 0.2s ease;
+        }
+        .timeline-item.active .timeline-dot {
+            background-color: #E88873;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.flex {
+            display: flex;
+        }
+        .modal-content {
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <div class="logo">
-            <img src="images/logo.png" alt="WaterCrisis360 Logo">
-        </div>
-        <div class="header-right">
-            <div class="search-bar">
-                <input type="text" placeholder="Search">
-                <button type="submit">🔍</button>
+<body class="antialiased">
+
+    <div class="min-h-screen lg:flex">
+        <!-- Sidebar Navigation -->
+        <nav class="w-full lg:w-64 flex-shrink-0 bg-[#EAEAEA] lg:h-screen lg:sticky lg:top-0">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-[#3D405B]">Project Roadmap</h2>
+                <p class="text-sm text-gray-600 mt-1">Your guide to building the app.</p>
             </div>
-            <nav class="top-nav">
-                <a href="#">log in</a>
-                <a href="#">language</a>
-            </nav>
-        </div>
-    </header>
+            <ul id="navigation" class="mt-2 text-gray-700">
+                <li><a href="#intro" class="nav-link block p-4 text-sm font-medium">1. The Big Picture</a></li>
+                <li><a href="#core-tech" class="nav-link block p-4 text-sm font-medium">2. Core Technology</a></li>
+                <li><a href="#data" class="nav-link block p-4 text-sm font-medium">3. Getting Data</a></li>
+                <li><a href="#model" class="nav-link block p-4 text-sm font-medium">4. Building the AI</a></li>
+                <li><a href="#app" class="nav-link block p-4 text-sm font-medium">5. Creating the App</a></li>
+                <li><a href="#deploy" class="nav-link block p-4 text-sm font-medium">6. Going Live</a></li>
+                <li><a href="#ethics" class="nav-link block p-4 text-sm font-medium">7. Ethical AI</a></li>
+            </ul>
+        </nav>
 
-    <nav class="main-nav">
-        <a href="#">Home</a> | <a href="#">Problem</a> | <a href="#">Solutions</a> | <a href="#">Demographics</a>
-    </nav>
-
-    <div class="main-content">
-        <aside class="sidebar">
-            <section>
-                <h3>Mission and purpose</h3>
-                <ul>
-                    <li><a href="#">What is watercrisis360</a></li>
-                    <li><a href="#">All recent changes</a></li>
-                </ul>
-            </section>
-            <section>
-                <h3>Resources</h3>
-                <ul>
-                    <li><a href="#">Articals</a></li>
-                    <li><a href="#">News</a></li>
-                    <li><a href="#">Case studies</a></li>
-                    <li><a href="#">blogs</a></li>
-                </ul>
-            </section>
-            <section>
-                <h3>Contribution</h3>
-                <ul>
-                    <li><a href="#">What you can do as an individual</a></li>
-                    <li><a href="#">Submit a problem statment</a></li>
-                    <li><a href="#">Submit solution</a></li>
-                    <li><a href="#">Donate</a></li>
-                </ul>
-            </section>
-            <section>
-                <h3>Tools</h3>
-            </section>
-            <section>
-                <h3>Community forum</h3>
-                <ul>
-                    <li><a href="#">Discord</a></li>
-                    <li><a href="#">Blogs</a></li>
-                    <li><a href="#">Socials</a></li>
-                    <li><a href="#">Share</a></li>
-                </ul>
-            </section>
-            <section>
-                <h3>About us</h3>
-                <ul>
-                    <li><a href="#">who we are</a></li>
-                    <li><a href="#">why you can trust us</a></li>
-                    <li><a href="#">FAQs</a></li>
-                </ul>
-            </section>
-            <section>
-                <h3>Contact us</h3>
-                <ul>
-                    <li><a href="#">Enquires</a></li>
-                    <li><a href="#">Apply to join us</a></li>
-                </ul>
-            </section>
-        </aside>
-
-        <main class="content">
-            <img src="images/desert-landscape.jpg" alt="Desert landscape with dry tree and bird" class="hero-image">
+        <!-- Main Content -->
+        <main class="flex-1 p-6 sm:p-8 md:p-12 bg-[#F8F7F4]">
             
-            <article>
-                <h1>What is Water Scarcity?</h1>
-                <p>Water scarcity refers to the shortage of available freshwater resources to meet the demands of human activities and ecosystems. It occurs when the demand for water exceeds the available supply in a specific area, or when poor water quality restricts its use.</p>
-                <p>Water scarcity can be classified into two main types:</p>
-                <ul>
-                    <li>Physical Water Scarcity: This occurs when natural water resources cannot meet the area's demand. It is often due to over-extraction, dry climate, or inadequate infrastructure to access available water sources.</li>
-                    <li>Economic Water Scarcity: This happens when water is available but inaccessible due to financial or institutional barriers, like lack of investment in water infrastructure or poor governance.</li>
-                </ul>
-                <p>Key factors contributing to water scarcity include population growth, climate change, urbanization, pollution, inefficient water use in agriculture, and poor water management practices.</p>
-            </article>
+            <!-- Section: Introduction -->
+            <section id="intro" class="content-section">
+                <h1 class="text-4xl md:text-5xl font-bold text-[#3D405B]">Build an AI-Powered Skin Analyzer</h1>
+                <p class="mt-4 text-lg text-gray-700 max-w-3xl">Welcome! This guide breaks down the process of creating a web app that analyzes face images to identify skin conditions. We'll walk you through each step, explaining the technology in a simple, interactive way. This project is a fantastic entry point into the world of AI, computer vision, and web development.</p>
+                <div class="mt-8 bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                    <h3 class="font-bold text-xl text-[#3D405B]">What You'll Build</h3>
+                    <p class="mt-2 text-gray-600">The goal is a web application where a user can upload three images of their face. The app's AI model will then process these images and overlay labels on specific areas, identifying conditions like pimples, acne, or hyperpigmentation. This guide provides the complete blueprint, from concept to a live application.</p>
+                </div>
+            </section>
 
-            <article>
-                <h2>How it is affecting us?</h2>
-                <p>Water scarcity has widespread impacts on human health, food security, economies, and the environment. Limited access to clean water leads to health issues, including waterborne diseases and poor sanitation. Agriculture, which heavily relies on water, faces reduced crop yields and rising food prices, contributing to food insecurity. Economically, industries suffer production slowdowns, and job losses occur in water-dependent sectors. Environmental degradation, such as the loss of biodiversity and desertification, is exacerbated by water shortages. Social and political tensions may arise as communities and nations compete for water, with migration often becoming a consequence. Climate change further worsens water scarcity through droughts, erratic rainfall, and the melting of glaciers, intensifying the global crisis.</p>
-            </article>
+            <!-- Section: Core Technology -->
+            <section id="core-tech" class="content-section">
+                <h1 class="text-3xl font-bold text-[#3D405B]">The Core Technology: Computer Vision</h1>
+                <p class="mt-4 text-lg text-gray-700 max-w-3xl">To "label spots" on an image, the app needs to "see" and understand visual information. This is powered by Computer Vision, a field of AI. Let's explore the key techniques to understand why one is perfect for our project.</p>
+                
+                <div class="mt-8">
+                    <h3 class="font-semibold text-xl text-center mb-2">How Does a Computer Analyze an Image?</h3>
+                    <p class="text-center text-gray-600 mb-6">Click on a technique below to see how it works and why it's suitable (or not) for our goal.</p>
+                    <div id="tech-selector" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="tech-card bg-white p-6 rounded-xl shadow-md border-2 border-transparent" data-tech="classification">
+                            <h4 class="font-bold text-lg">1. Image Classification</h4>
+                            <p class="text-sm text-gray-600 mt-1">Categorizes the whole image.</p>
+                        </div>
+                        <div class="tech-card bg-white p-6 rounded-xl shadow-md border-2 border-transparent" data-tech="detection">
+                            <h4 class="font-bold text-lg">2. Object Detection</h4>
+                            <p class="text-sm text-gray-600 mt-1">Finds objects with boxes.</p>
+                        </div>
+                        <div class="tech-card bg-white p-6 rounded-xl shadow-md border-2 border-transparent" data-tech="segmentation">
+                            <h4 class="font-bold text-lg">3. Image Segmentation</h4>
+                            <p class="text-sm text-gray-600 mt-1">Outlines the exact shape of objects.</p>
+                        </div>
+                    </div>
+                </div>
 
-            <article>
-                <h2>What will happen if no step is taken ?</h2>
-                <p>If no action is taken to address water scarcity, it could lead to a global health crisis with increased waterborne diseases and preventable deaths. Agricultural output would decline, causing food shortages and rising prices, while key industries would suffer, leading to widespread unemployment and economic collapse. Environmental degradation would intensify, with the loss of ecosystems, biodiversity, and fertile land due to desertification. Social unrest and conflicts over dwindling water resources could arise, potentially resulting in wars and mass migration. Climate change would worsen, amplifying droughts and extreme weather, creating a vicious cycle of destruction and resource depletion.</p>
-            </article>
+                <div id="tech-display" class="mt-8 bg-white p-8 rounded-xl shadow-lg border border-gray-200 min-h-[20rem] flex items-center justify-center">
+                    <p class="text-gray-500">Select a technique above to learn more.</p>
+                </div>
+            </section>
 
-            <div class="cta-buttons">
-                <button class="btn-primary">Find a solution</button>
-                <button class="btn-secondary">Submit a problem</button>
-            </div>
+            <!-- Section: Data -->
+            <section id="data" class="content-section">
+                <h1 class="text-3xl font-bold text-[#3D405B]">Gathering Your Data</h1>
+                <p class="mt-4 text-lg text-gray-700 max-w-3xl">AI models learn from data. For our project, we need lots of images of skin conditions that are already labeled. This is the foundation of our AI's intelligence. High-quality, diverse data is essential for building an accurate and fair model.</p>
+                
+                <div class="mt-8 space-y-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="font-bold text-xl flex items-center"><span class="text-2xl mr-3">📂</span> Find Datasets</h3>
+                        <p class="mt-2 text-gray-600">You don't have to collect images yourself. We use open-source datasets where researchers have already gathered and labeled images. Platforms like <b class="font-semibold">Roboflow Universe</b> and academic collections like <b class="font-semibold">ISIC</b> are great resources. The key is to find datasets with "segmentation annotations" – precise pixel-level outlines of the conditions we want to detect.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="font-bold text-xl flex items-center"><span class="text-2xl mr-3">✨</span> Prepare and Augment</h3>
+                        <p class="mt-2 text-gray-600">Once we have data, we prepare it. <b class="font-semibold">Preprocessing</b> involves standardizing images (e.g., making them all the same size). <b class="font-semibold">Data Augmentation</b> is a trick to create more data by slightly altering existing images (flipping, rotating, changing brightness). This makes our model more robust and prevents it from just "memorizing" the training images.</p>
+                    </div>
+                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="font-bold text-xl flex items-center"><span class="text-2xl mr-3">📊</span> Split the Data</h3>
+                        <p class="mt-2 text-gray-600">We never test the model on the same data it learned from. We split our dataset into three parts:</p>
+                        <ul class="mt-3 space-y-2 list-disc list-inside text-gray-600">
+                            <li><b class="font-semibold">Training Set (70-80%):</b> The data the model learns from.</li>
+                            <li><b class="font-semibold">Validation Set (10-15%):</b> Used during training to tune the model and check for issues.</li>
+                            <li><b class="font-semibold">Test Set (10-15%):</b> Kept completely separate and used only at the end to get an honest score of the model's performance on unseen data.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Model -->
+            <section id="model" class="content-section">
+                <h1 class="text-3xl font-bold text-[#3D405B]">Building the AI's "Brain"</h1>
+                <p class="mt-4 text-lg text-gray-700 max-w-3xl">The "brain" of our application is a Deep Learning model. Specifically, we'll use a Convolutional Neural Network (CNN), which is excellent at understanding images. But we won't build one from scratch—that's too hard! Instead, we'll use a powerful technique called Transfer Learning.</p>
+
+                <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="font-bold text-xl">What is Transfer Learning?</h3>
+                        <p class="mt-2 text-gray-600">Imagine you want to become a master chef who specializes in baking cakes. Instead of learning everything from scratch (what is flour, how does an oven work), you hire a world-class chef who already knows all the fundamentals of cooking.</p>
+                        <p class="mt-2 text-gray-600">You then "fine-tune" their skills by teaching them your specific cake recipes. This is <b class="font-semibold">Transfer Learning</b>. We take a pre-trained model (like <b class="font-semibold">ResNet50</b> or <b class="font-semibold">U-Net</b>), which is already an expert at seeing general shapes and patterns, and then we fine-tune it on our specific dataset of skin conditions. This saves enormous amounts of time and data.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="font-bold text-xl">Choosing Your Tools</h3>
+                        <p class="mt-2 text-gray-600">To build and train our model, we'll use a Python framework. The best choice for a beginner is <b class="font-semibold">TensorFlow with Keras</b>.</p>
+                        <p class="mt-2 text-gray-600">Keras is a high-level API that feels like playing with LEGOs. It simplifies building complex neural networks, letting you focus on the architecture rather than getting lost in complex code. It's well-documented and has a huge community, making it easy to find help and tutorials.</p>
+                    </div>
+                </div>
+                 <div class="mt-8 bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                    <h3 class="font-bold text-xl text-center mb-4">A Simplified View of a CNN</h3>
+                    <div class="flex flex-col items-center space-y-4">
+                        <div class="w-24 h-24 bg-blue-100 rounded-lg flex items-center justify-center font-semibold text-blue-800">Input Image</div>
+                        <div class="text-2xl">↓</div>
+                        <div class="w-48 p-3 bg-yellow-100 rounded-lg text-center font-semibold text-yellow-800">Convolution (Finds Edges/Textures)</div>
+                        <div class="text-2xl">↓</div>
+                        <div class="w-48 p-3 bg-green-100 rounded-lg text-center font-semibold text-green-800">Pooling (Reduces Size)</div>
+                        <div class="text-2xl">↓</div>
+                        <div class="w-48 p-3 bg-yellow-100 rounded-lg text-center font-semibold text-yellow-800">...Repeats...</div>
+                        <div class="text-2xl">↓</div>
+                        <div class="w-48 p-3 bg-red-100 rounded-lg text-center font-semibold text-red-800">Prediction (Outputs the Mask)</div>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-4">This diagram shows the basic flow. A CNN processes an image through multiple layers to extract simple features (like edges) and then combines them to recognize complex objects (like a pimple).</p>
+                </div>
+            </section>
+            
+            <!-- Section: App -->
+            <section id="app" class="content-section">
+                <h1 class="text-3xl font-bold text-[#3D405B]">Creating the Web Application</h1>
+                <p class="mt-4 text-lg text-gray-700 max-w-3xl">Now we need a website for users to interact with our AI model. A web app has two main parts: the Frontend (what the user sees) and the Backend (the server-side logic).</p>
+                
+                <div id="app-architecture" class="mt-8 bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="font-bold text-xl text-center mb-6">Application Architecture</h3>
+                    <p class="text-center text-gray-600 mb-8">This is how all the pieces connect. Click a component to learn why it was chosen.</p>
+                    <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8">
+                        <!-- Frontend -->
+                        <div class="app-component text-center p-6 bg-blue-50 rounded-lg border-2 border-blue-200 cursor-pointer" data-component="frontend">
+                            <div class="text-4xl">🖥️</div>
+                            <h4 class="font-bold mt-2">Frontend</h4>
+                            <p class="text-sm text-gray-600">(User Interface)</p>
+                        </div>
+                        
+                        <div class="text-2xl font-semibold text-gray-400 transform md:-translate-y-4">→</div>
+                        
+                        <!-- Backend -->
+                        <div class="app-component text-center p-6 bg-green-50 rounded-lg border-2 border-green-200 cursor-pointer" data-component="backend">
+                             <div class="text-4xl">⚙️</div>
+                             <h4 class="font-bold mt-2">Backend</h4>
+                             <p class="text-sm text-gray-600">(Server & API)</p>
+                        </div>
+                        
+                        <div class="text-2xl font-semibold text-gray-400 transform md:-translate-y-4">→</div>
+
+                        <!-- Model -->
+                        <div class="app-component text-center p-6 bg-purple-50 rounded-lg border-2 border-purple-200 cursor-pointer" data-component="model">
+                             <div class="text-4xl">🧠</div>
+                             <h4 class="font-bold mt-2">AI Model</h4>
+                             <p class="text-sm text-gray-600">(The Brain)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal for App Architecture -->
+                <div id="app-modal" class="modal">
+                    <div class="modal-content bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full m-4">
+                       <div id="modal-body"></div>
+                        <button id="modal-close" class="mt-6 w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Close</button>
+                    </div>
+                </div>
+
+            </section>
+            
+            <!-- Section: Deploy -->
+            <section id="deploy" class="content-section">
+                <h1 class="text-3xl font-bold text-[#3D405B]">Going Live: Deployment</h1>
+                <p class="mt-4 text-lg text-gray-700 max-w-3xl">Deployment is the process of taking your application from your local computer and making it accessible to the world on the internet. We'll use modern tools to make this process reliable and repeatable.</p>
+
+                <div class="mt-8">
+                    <h3 class="font-bold text-xl text-center mb-4">The Deployment Roadmap</h3>
+                    <p class="text-center text-gray-600 mb-8">Here is a step-by-step path from code to a live application. Click each step for details.</p>
+                    <div class="relative w-full max-w-xl mx-auto">
+                        <!-- The line -->
+                        <div class="absolute left-1/2 -translate-x-1/2 top-0 h-full w-1 bg-gray-300 rounded"></div>
+                        
+                        <div id="timeline-container" class="space-y-12">
+                            <!-- Timeline items will be injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Ethics -->
+            <section id="ethics" class="content-section">
+                <h1 class="text-3xl font-bold text-red-600">An Important Note on Ethical AI</h1>
+                <p class="mt-4 text-lg text-gray-700 max-w-3xl">When building AI, especially for health-related applications, we have a responsibility to be ethical and careful. Technology is not neutral; it can cause harm if we are not thoughtful.</p>
+
+                <div class="mt-8 space-y-6">
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-6 rounded-r-lg shadow">
+                        <h3 class="font-bold text-xl flex items-center"><span class="text-2xl mr-3">⚖️</span> Bias in AI Models</h3>
+                        <p class="mt-2">AI models can be biased. If a model is trained mostly on images of one skin tone, it will perform poorly and unfairly on others. It is an <b class="font-semibold">ethical imperative</b> to use diverse datasets (like the SCIN dataset) to ensure your app works equitably for everyone.</p>
+                    </div>
+                    <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-6 rounded-r-lg shadow">
+                        <h3 class="font-bold text-xl flex items-center"><span class="text-2xl mr-3">🛡️</span> Data Privacy</h3>
+                        <p class="mt-2">Facial images are sensitive personal data. You must handle them securely and be transparent with users about how their data is used. Always get explicit consent and follow privacy regulations like GDPR.</p>
+                    </div>
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-800 p-6 rounded-r-lg shadow">
+                        <h3 class="font-bold text-xl flex items-center"><span class="text-2xl mr-3">⚠️</span> Critical Disclaimer</h3>
+                        <p class="mt-2">Your application must include a clear, prominent disclaimer. State that it is for <b class="font-semibold">educational purposes only</b> and is <b class="font-semibold">NOT a substitute for medical diagnosis</b>. Always advise users to consult a qualified doctor for any health concerns.</p>
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 
-    <footer>
-        <div class="footer-content">
-            <p>Addressing the Global Water Crisis Together!</p>
-            <img src="images/logo.png" alt="WaterCrisis360 Logo" class="footer-logo">
-            <p class="social-follow">Follow us:</p>
-            <div class="social-icons">
-                <a href="#" class="social-icon">Instagram</a>
-                <a href="#" class="social-icon">Facebook</a>
-                <a href="#" class="social-icon">Twitter</a>
-                <a href="#" class="social-icon">LinkedIn</a>
-            </div>
-        </div>
-        <div class="footer-links">
-            <a href="#">Privacy policy</a> | <a href="#">Terms of use</a> | <a href="#">Cookies</a>
-        </div>
-    </footer>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const sections = document.querySelectorAll('.content-section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const techSelector = document.getElementById('tech-selector');
+    const techDisplay = document.getElementById('tech-display');
 
-    <script src="js/scripts.js"></script>
+    const techData = {
+        classification: {
+            title: 'Image Classification',
+            description: 'This technique assigns a single label to an entire image. It answers the question "What is in this picture?"',
+            output: 'A single text label, like "Acne Present" or "No Acne".',
+            suitability: 'Low',
+            reason: 'It can\'t tell you WHERE the acne is, so it fails our core requirement to "label on the spots". It only gives a general diagnosis for the whole image.'
+        },
+        detection: {
+            title: 'Object Detection',
+            description: 'This technique goes a step further. It finds specific objects in an image and draws a rectangular "bounding box" around each one.',
+            output: 'A box around each detected condition with a label (e.g., a rectangle around a pimple labeled "Pimple").',
+            suitability: 'Medium',
+            reason: 'This is better because it gives a location. However, a rectangular box is not a precise outline. A patch of hyperpigmentation isn\'t a perfect rectangle.'
+        },
+        segmentation: {
+            title: 'Image Segmentation',
+            description: 'This is the most precise technique. It classifies every single pixel in the image, allowing it to trace the exact outline of an object.',
+            output: 'A pixel-perfect "mask" or outline for each condition, showing its exact shape and location.',
+            suitability: 'High',
+            reason: 'This is the ideal choice. It perfectly matches the goal to "label on the spots" by providing precise, accurate outlines of each affected area.'
+        }
+    };
+
+    const appComponentData = {
+        frontend: {
+            title: '🖥️ Frontend (The User Interface)',
+            recommendation: 'Vue.js',
+            reason: 'For a beginner, Vue.js often has a gentler learning curve than other frameworks like React. Its documentation is famously clear, and its structure makes it fast to build a working prototype. It handles the user-facing parts: the image upload form and displaying the final, labeled images on an HTML canvas.',
+            tech: 'HTML, CSS, JavaScript, and the Vue.js framework.'
+        },
+        backend: {
+            title: '⚙️ Backend (The Server)',
+            recommendation: 'Flask (Python)',
+            reason: 'The backend connects the frontend to the AI model. Flask is a Python "micro-framework" that is incredibly simple and lightweight. It\'s perfect for creating an API endpoint that receives the images from the user, passes them to the model for processing, and sends the results back. Since most AI is done in Python, Flask integrates seamlessly.',
+            tech: 'Python and the Flask framework.'
+        },
+        model: {
+            title: '🧠 AI Model (The Brain)',
+            recommendation: 'TensorFlow/Keras',
+            reason: 'This is the core of the intelligence. We use TensorFlow, a powerful machine learning platform, with its user-friendly Keras API. This allows us to load a pre-trained segmentation model (like U-Net) and fine-tune it on our skin condition dataset. The model takes an image as input and outputs the segmentation masks.',
+            tech: 'Python, TensorFlow, Keras, and a pre-trained CNN.'
+        }
+    };
+    
+    const timelineData = [
+        {
+            step: 1,
+            title: 'Train & Save Model',
+            content: 'First, your AI model is trained on your prepared dataset and saved into a file. This file contains all the "knowledge" the model has learned.'
+        },
+        {
+            step: 2,
+            title: 'Build Backend API',
+            content: 'Next, you write the Flask application. This code loads the saved model file and defines an API endpoint (e.g., `/analyze`) that knows how to receive images.'
+        },
+        {
+            step: 3,
+            title: 'Containerize with Docker',
+            content: 'This is a crucial step for reliability. You write a `Dockerfile` that packages your Flask app, the AI model, and all its dependencies (like TensorFlow, Flask) into a single, portable unit called a container. This solves the "it works on my machine" problem.'
+        },
+        {
+            step: 4,
+            title: 'Push to a Registry',
+            content: 'You upload your container "image" to a cloud storage location called a container registry (like Google Container Registry or Docker Hub). This acts as a repository for your app.'
+        },
+        {
+            step: 5,
+            title: 'Deploy to the Cloud',
+            content: 'Finally, you tell a cloud platform (like Google Cloud Run) to pull your image from the registry and run it. Cloud Run is great for beginners as it\'s "serverless"—it automatically handles scaling and infrastructure for you. Your app is now live!'
+        },
+        {
+            step: 6,
+            title: 'Test & Monitor',
+            content: 'Once deployed, you thoroughly test the live URL to ensure everything works. You also use the cloud platform\'s tools to monitor for errors and track performance.'
+        }
+    ];
+
+    function updateContent(hash) {
+        hash = hash || '#intro';
+        
+        sections.forEach(section => {
+            if ('#' + section.id === hash) {
+                section.classList.add('active');
+            } else {
+                section.classList.remove('active');
+            }
+        });
+
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === hash) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+
+        window.scrollTo(0, 0);
+    }
+    
+    // Initial content update
+    updateContent(window.location.hash);
+    
+    // Navigation click handler
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const hash = e.target.getAttribute('href');
+            history.pushState(null, null, hash);
+            updateContent(hash);
+        });
+    });
+
+    // Handle back/forward browser buttons
+    window.addEventListener('popstate', () => {
+        updateContent(window.location.hash);
+    });
+
+    // Tech selector interaction
+    if (techSelector) {
+        techSelector.addEventListener('click', (e) => {
+            const card = e.target.closest('.tech-card');
+            if (!card) return;
+
+            const techKey = card.dataset.tech;
+            const data = techData[techKey];
+            
+            // Update selected card style
+            document.querySelectorAll('.tech-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+
+            // Update display area
+            techDisplay.innerHTML = `
+                <div class="w-full text-left">
+                    <h3 class="font-bold text-2xl text-[#3D405B]">${data.title}</h3>
+                    <p class="mt-3 text-gray-600">${data.description}</p>
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <p class="font-semibold text-gray-800">Output:</p>
+                        <p class="text-gray-600">${data.output}</p>
+                    </div>
+                    <div class="mt-4">
+                        <p class="font-semibold text-gray-800">Suitability for Our Goal:</p>
+                        <p class="px-3 py-1 text-sm inline-block rounded-full font-semibold ${data.suitability === 'High' ? 'bg-green-100 text-green-800' : data.suitability === 'Medium' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">
+                            ${data.suitability}
+                        </p>
+                        <p class="mt-2 text-gray-600">${data.reason}</p>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // App Architecture Modal
+    const appArch = document.getElementById('app-architecture');
+    const modal = document.getElementById('app-modal');
+    const modalBody = document.getElementById('modal-body');
+    const modalClose = document.getElementById('modal-close');
+
+    if (appArch && modal) {
+        appArch.addEventListener('click', (e) => {
+            const component = e.target.closest('.app-component');
+            if (!component) return;
+
+            const componentKey = component.dataset.component;
+            const data = appComponentData[componentKey];
+            
+            modalBody.innerHTML = `
+                <h3 class="text-2xl font-bold text-[#3D405B]">${data.title}</h3>
+                <p class="mt-4 text-gray-700"><b class="font-semibold">Recommendation:</b> ${data.recommendation}</p>
+                <p class="mt-2 text-gray-600">${data.reason}</p>
+                <p class="mt-4 text-sm text-gray-500"><b>Primary Technologies:</b> ${data.tech}</p>
+            `;
+            modal.classList.add('flex');
+        });
+
+        modalClose.addEventListener('click', () => modal.classList.remove('flex'));
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('flex');
+            }
+        });
+    }
+    
+    // Build Timeline
+    const timelineContainer = document.getElementById('timeline-container');
+    if (timelineContainer) {
+        timelineData.forEach(item => {
+            const timelineItem = document.createElement('div');
+            timelineItem.classList.add('timeline-item', 'relative', 'cursor-pointer');
+            timelineItem.innerHTML = `
+                <div class="flex items-center">
+                    <div class="timeline-dot w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold z-10">${item.step}</div>
+                    <h4 class="ml-4 font-bold text-lg">${item.title}</h4>
+                </div>
+                <div class="timeline-content ml-4 mt-2 pl-10 pb-4 border-l-2 border-gray-300">
+                    <p class="text-gray-600">${item.content}</p>
+                </div>
+            `;
+            timelineContainer.appendChild(timelineItem);
+        });
+
+        timelineContainer.addEventListener('click', e => {
+            const item = e.target.closest('.timeline-item');
+            if (item) {
+                // Close other items
+                document.querySelectorAll('.timeline-item').forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                // Toggle current item
+                item.classList.toggle('active');
+            }
+        });
+    }
+
+});
+</script>
+
 </body>
 </html>
